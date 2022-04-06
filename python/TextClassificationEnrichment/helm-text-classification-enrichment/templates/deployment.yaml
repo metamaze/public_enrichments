@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "text-classification-enrichment.fullname" . }}
+  labels:
+    {{- include "text-classification-enrichment.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "text-classification-enrichment.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "text-classification-enrichment.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name : acr-secret
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: BEARER_TOKEN
+              value: {{ .Values.authorization.bearer | quote }}
+            - name: ENTITY_NAMES_TO_BE_ENRICHED
+              value: {{ .Values.classification.entity_names_to_be_enriched | quote }}
+            - name: ENRICHMENT_NAME
+              value: {{ .Values.classification.enrichment_name | quote }}
+            - name: PREDICTION_PATH
+              value: {{ .Values.classification.prediction_path | quote }}
+            - name: DYNAMIC_LIST_PATH
+              value: {{ .Values.classification.dynamic_list_path | quote }}

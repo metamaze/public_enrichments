@@ -1,0 +1,52 @@
+exclude: ^(blib2to3/|profiling/|tests/data/)
+default_language_version:
+    python: python3.8
+repos:
+-   repo: local
+    hooks:
+    - id: isort
+      name: isort
+      description: 'isort will sort python imports in a way that makes sense'
+      entry: isort
+      language: system
+      types: [python]
+      stages: [commit]
+      args: # taken to comply with black 
+        - -rc
+        - --lines=120 
+        - --use-parentheses
+        - --trailing-comma
+        - --multi-line=3
+
+    - id: black
+      name: black
+      description: 'black will standardize code style in all project files in-place'
+      language: system
+      entry: black
+      types: [python]
+      stages: [commit]
+      args:
+        - --line-length=120
+
+    - id: flake8
+      name: flake8
+      description: 'flake8 is a command-line utility for enforcing style consistency across Python projects'
+      language: system
+      entry: flake8
+      types: [python]
+      stages: [commit]
+
+    - id: mypy
+      name: mypy
+      description: 'Mypy is an optional static type checker for Python'
+      language: system
+      entry: mypy
+      types: [python]
+      stages: [commit]
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+    - id: check-added-large-files
+      args: ['--maxkb=150']
+

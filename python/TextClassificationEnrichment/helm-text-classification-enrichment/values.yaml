@@ -1,0 +1,58 @@
+# Default values for text-classification-enrichment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: <your container registry with enrichment server image>
+  tag: latest
+
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+
+  hosts:
+    - host:  <your webhook URL>
+      paths: ["/"]
+  tls:
+    - secretName: text-classification-enrichment-tls
+      hosts:
+        -  <your webhook URL>
+
+resources:
+  limits:
+    memory: 1000Mi
+  requests:
+    cpu: 100m
+    memory: 500Mi
+
+
+authorization:
+  bearer: <fill as needed> // Configured in Metamaze Project Settings > Enrichments
+
+classification:
+  entity_names_to_be_enriched: <fill here with comma separated entity names > // Configured in Metamaze Project Settings
+  enrichment_name: <fill here > // Configured in Metamaze Project Settings > Enrichments
+  prediction_path: <fill here > // Configured in Metamaze Project Settings > Enrichments
+  dynamic_list_path: <fill here > // Configured in Metamaze Project Settings > Enrichments

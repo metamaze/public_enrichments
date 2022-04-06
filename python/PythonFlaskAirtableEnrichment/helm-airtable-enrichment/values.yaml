@@ -1,0 +1,54 @@
+# Default values for airtable-enrichment.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: <your container registry with enrichment server image>
+  tag: latest
+
+nameOverride: ""
+fullnameOverride: ""
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+
+  hosts:
+    - host: <your webhook URL>
+      paths: ["/"]
+  tls:
+    - secretName: airtable-enrichment-tls
+      hosts:
+        - <your webhook URL>
+
+resources:
+  limits:
+    memory: 200Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
+
+
+airtable:
+  url: <fill as needed> <Found on https://airtable.com/api>
+  token: <fill as needed> <Found on https://airtable.com/account>
+  bearer: <fill as needed> <Configured in Metamaze Project Settings>

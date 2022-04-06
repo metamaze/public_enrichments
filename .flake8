@@ -1,0 +1,7 @@
+[flake8]
+ignore = D203, E203, W503
+max-line-length = 120
+exclude =
+    venv/
+max-complexity = 10
+docstring-convention=numpy

@@ -1,0 +1,5 @@
+# formatting
+black==19.10b0
+flake8==3.7.9
+mypy==0.770
+mypy-extensions==0.4.3
