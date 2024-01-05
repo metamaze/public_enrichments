@@ -6,11 +6,11 @@ Remote branch: main
 
 Steps to add a new enrichment in this repository using git subtree command:
 
-// start on a new branch, to not mess up the main branch
-`git checkout -b enrichment/XXX`
-
 // fetch latest changes from the remote repository
 `git fetch git@github.com:metamaze/knative-enrichments.git main:knative_main`
+
+// start on a new branch, to not mess up the main branch
+`git checkout -b enrichment/XXX`
 
 // checkout the knative_main branch (local copy op `main` from `knative-enrichments.git`)
 `git checkout knative_main`
