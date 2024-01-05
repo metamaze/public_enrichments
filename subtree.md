@@ -24,5 +24,3 @@ Steps to add a new enrichment in this repository using git subtree command:
 
 // add the subtree_split_branch (the branch that only contains the specified folder you need) to the public_enrichments repository
 `git subtree add --prefix=functions/ts_metamaze subtree_split_branch`
-
-9uQ\*Xg6KgGDU
