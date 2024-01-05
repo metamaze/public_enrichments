@@ -17,7 +17,7 @@ Steps to add a new enrichment in this repository using git subtree command:
 
 // only copy the directory of `knative-enrichments.git` you need (that are allowed to be public!)
 // --prefix specifies the path the the directory you want to include in `public-enrichments.git`
-`git subtree split --prefix=functions/ts_metamaze -b subtree_split_branch`
+`git subtree split --prefix=functions/KNATIVE_DIRECTORY -b subtree_split_branch`
 
 // jump back on `enrichment/XXX` branch
 `git checkout -`
