@@ -27,6 +27,12 @@ Examples of when it makes sense to use an enrichment
 - Typescript / javascript
 - Python
 
+# Standardized enrichments
+
+[Metamaze](https://metamaze.eu) offers powerful functionality through enrichments, working seamlessly behind the scenes to enhance your experience. The best part? You can easily configure these enrichments without any programming knowledge, making customization a breeze. The code behind these enrichments is open source and available in this repository.
+
+- [Invoice type enrichment](./ts_standardized_invoice_type/README.md)
+
 ## Get help
 
 For any questions, feel free to open an issue here on GitHub or contact the Metamaze team at support@metamaze.eu.
