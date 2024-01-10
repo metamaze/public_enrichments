@@ -6,9 +6,15 @@ import { RequestBodyV3 } from './types/enrichmentsV3';
 export class AppController {
   constructor(private invoiceTypeService: InvoiceTypeService) {}
 
-  @Post('/invoice-type')
+  @Post('invoice-type')
   @HttpCode(201)
   invoiceType(@Body() data: RequestBodyV3<Metadata>) {
     return this.invoiceTypeService.enrichment(data);
+  }
+
+  @Post('invoice-type/options')
+  @HttpCode(200)
+  options(@Body() data: RequestBodyV3<Metadata>) {
+    return this.invoiceTypeService.options(data);
   }
 }

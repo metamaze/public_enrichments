@@ -1,12 +1,12 @@
 import { RequestBodyV3, Result } from '@/types/enrichmentsV3';
 import { HttpException, Injectable } from '@nestjs/common';
 
-type FindText = { key: 'find-text'; metadata: { entityId: string; percentage: number; page: number } };
-type NegativeAmount = {
+export type FindText = { key: 'find-text'; metadata: { entityId: string; percentage: number; page: number } };
+export type NegativeAmount = {
   key: 'negative-amount';
   metadata: { entityId: string };
 };
-type Action = FindText | NegativeAmount;
+export type Action = FindText | NegativeAmount;
 
 export type Metadata = {
   /**
@@ -29,10 +29,16 @@ export type Metadata = {
 
 @Injectable()
 export class InvoiceTypeService {
+  /**
+   * Executes for every action in the metadata the correct rule.
+   * If one of the actions is true, it's a credit note.
+   * @param data
+   * @returns
+   */
   enrichment(data: RequestBodyV3<Metadata>): Result {
     let isCreditNote = false;
     // execute every action, if one of them is true, it's a credit note
-    const actions = data.metadata.actions;
+    const actions = data.metadata.actions || [];
     for (const action of actions) {
       if (action.key === 'find-text') {
         const result = this.findText(action.metadata, data);
@@ -56,7 +62,16 @@ export class InvoiceTypeService {
     };
   }
 
-  findText(metadata: FindText['metadata'], data: RequestBodyV3<Metadata>) {
+  /**
+   * Checks is an annotation is within a certain percentage of the page.
+   *
+   * @param metadata.entityId entity ID is configured in the UI
+   * @param metadata.percentage percentage of the page to search for the text (top-to-bottom)
+   * @param metadata.page page index to specify which page
+   * @param data request body
+   * @returns {boolean} within boundary
+   */
+  findText(metadata: FindText['metadata'], data: RequestBodyV3<Metadata>): boolean {
     const { entityId, percentage, page: pageIndex } = metadata;
 
     // Error handling
@@ -81,6 +96,13 @@ export class InvoiceTypeService {
     return withingBoundary;
   }
 
+  /**
+   * Checks if an annotation has a negative amount.
+   *
+   * @param metadata.entityId entity ID is configured in the UI
+   * @param data request body
+   * @returns {boolean} annotation with given entity ID contains a negative amount
+   */
   negativeAmount(metadata: NegativeAmount['metadata'], data: RequestBodyV3<Metadata>) {
     const { entityId } = metadata;
     if (!entityId) throw new HttpException('Entity ID is not specified in action', 400);
@@ -89,5 +111,19 @@ export class InvoiceTypeService {
       (annotation) => typeof annotation.value === 'number' && annotation.value < 0
     );
     return hasNegativeAmount;
+  }
+
+  /**
+   * Options that can be used during human validation.
+   * Metamaze expects an array of objects with a label and a value.
+   *
+   * @param data
+   * @returns
+   */
+  options(data: RequestBodyV3<Metadata>) {
+    return [
+      { label: 'credit', value: data.metadata.credit },
+      { label: 'debit', value: data.metadata.debit }
+    ];
   }
 }
