@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "typescript.preferences.importModuleSpecifier": "shortest",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": true,
+    },
+    "typescript.tsdk": "node_modules/typescript/lib",
+  },
+}
